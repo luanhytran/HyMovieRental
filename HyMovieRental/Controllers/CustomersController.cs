@@ -30,11 +30,46 @@ namespace HyMovieRental.Controllers
         public ActionResult New()
         {
             var membershipTypes = _context.MembershipTypes.ToList();
-            var viewModel = new NewCustomerViewModel()
+            var viewModel = new CustomerFormViewModel()
             {
                 MembershipTypes = membershipTypes
             };
-            return View(viewModel);
+            return View("CustomerForm",viewModel);
+        }
+
+        [HttpPost]
+        public ActionResult Save(Customer customer)
+        {
+            // If Id is 0 we are creating a customer
+            if (customer.Id == 0)
+            {
+                // When add this to context it's not written in the db
+                // it just in the memory
+                // Our db context have a change tracking mechanism
+                // Any time you add a object to it or modify or remove any existing objects
+                // it will mark them as added, modified or deleted
+                _context.Customers.Add(customer);
+            }
+            else // If customer have Id we are editing a customer
+            {
+                // Use Single method because we edit a customer so it must have that customer in the db
+                // so it will not be return a default, if it has then throw exception
+                var customerInDb = _context.Customers.Single(x => x.Id == customer.Id);
+
+                // Avoid use TryUpdateModel method for update customer because it's not loosely coupled
+                // We can use AutoMapper with Dto model to update customer: Mapper.Map(customer, customerInDb)
+                customerInDb.Name = customer.Name;
+                customerInDb.Birthdate = customer.Birthdate;
+                customerInDb.MembershipTypeId = customer.MembershipTypeId;
+                customerInDb.IsSubscribedToNewsLetter = customer.IsSubscribedToNewsLetter;
+            }
+
+            // At this time db context go through all modified objects
+            // and base on the kind of modification,
+            // it generate sql statement at runtime and then will run them on db
+            _context.SaveChanges();
+
+            return RedirectToAction("Index", "Customers");
         }
 
         // GET: Customers
@@ -55,6 +90,22 @@ namespace HyMovieRental.Controllers
                 return HttpNotFound();
 
             return View(customer);
+        }
+
+        public ActionResult Edit(int id)
+        {
+            var customer = _context.Customers.SingleOrDefault(x => x.Id == id);
+
+            if (customer == null)
+                return HttpNotFound();
+
+            var viewModel = new CustomerFormViewModel()
+            {
+                Customer = customer,
+                MembershipTypes = _context.MembershipTypes.ToList()
+            };
+
+            return View("CustomerForm", viewModel);
         }
     }
 }
