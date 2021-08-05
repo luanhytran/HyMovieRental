@@ -19,5 +19,10 @@ namespace HyMovieRental.Models
         public byte DurationInMonths { get; set; }
 
         public byte DiscountRate { get; set; }
+
+        // use this to represent membership type instead magic number for maintainable and clearer meaning
+        // example: compare the membership type for 18+ birthdate
+        public static readonly byte Unknown = 0;
+        public static readonly byte PayAsYouGo = 1;
     }
 }

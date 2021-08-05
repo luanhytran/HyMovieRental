@@ -13,6 +13,7 @@ namespace HyMovieRental.Models
         public string Name { get; set; }
 
         [DisplayName("Date of Birth")]
+        [Min18YearsIfAMember]
         public DateTime? Birthdate { get; set; }
 
         public bool IsSubscribedToNewsLetter { get; set; }
@@ -23,5 +24,7 @@ namespace HyMovieRental.Models
         // foreign key
         [DisplayName("Membership Type")]
         public byte MembershipTypeId { get; set; }
+
+    
     }
 }

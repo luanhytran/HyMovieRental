@@ -23,8 +23,8 @@ namespace HyMovieRental
                 "~/Scripts/bootstrap.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
-                "~/Content/bootstrap-paper.css",
-                "~/Content/site.css"));
+                "~/Content/bootstrap-lumen.css",
+                "~/Content/Site.css"));
         }
     }
 }

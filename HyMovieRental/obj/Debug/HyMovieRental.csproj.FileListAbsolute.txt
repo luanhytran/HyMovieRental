@@ -346,3 +346,4 @@ D:\GitHub\HyMovieRental\HyMovieRental\obj\Debug\HyMovieRental.csproj.CoreCompile
 D:\GitHub\HyMovieRental\HyMovieRental\obj\Debug\HyMovieRental.csproj.CopyComplete
 D:\GitHub\HyMovieRental\HyMovieRental\obj\Debug\HyMovieRental.dll
 D:\GitHub\HyMovieRental\HyMovieRental\obj\Debug\HyMovieRental.pdb
+D:\GitHub\HyMovieRental\HyMovieRental\obj\Debug\HyMovieRental.Migrations.ChangeNumberInStockToByte.resources

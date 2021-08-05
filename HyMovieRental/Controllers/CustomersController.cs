@@ -32,15 +32,30 @@ namespace HyMovieRental.Controllers
             var membershipTypes = _context.MembershipTypes.ToList();
             var viewModel = new CustomerFormViewModel()
             {
-                MembershipTypes = membershipTypes
+                MembershipTypes = membershipTypes,
+
+                // Initial default value 0 for customer Id so validation summary don't show Id filed is required
+                // If we don't do this the hidden filed Id in the form will be empty string so it will have validation error
+                Customer = new Customer()
             };
             return View("CustomerForm",viewModel);
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Save(Customer customer)
         {
-            // If Id is 0 we are creating a customer
+            if (!ModelState.IsValid)
+            {
+                var viewModel = new CustomerFormViewModel()
+                {
+                    MembershipTypes = _context.MembershipTypes.ToList(),
+                    Customer = customer
+                };
+
+                return View("CustomerForm", viewModel);
+            }
+                // If Id is 0 we are creating a customer
             if (customer.Id == 0)
             {
                 // When add this to context it's not written in the db
