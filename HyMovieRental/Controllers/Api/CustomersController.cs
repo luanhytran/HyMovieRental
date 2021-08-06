@@ -20,11 +20,13 @@ namespace HyMovieRental.Controllers.Api
     
         // GET /api/customers
         // Because we return a list of object, this action will response to below url by convention
-        public IEnumerable<CustomerDto> GetCustomers()
+        public IHttpActionResult GetCustomers()
         {
             // Pass in .Select() a delegate and does the mapping
             // Map each Customer in the list to customerDto
-            return _context.Customers.ToList().Select(Mapper.Map<Customer,CustomerDto>);
+            var customerDto = _context.Customers.ToList().Select(Mapper.Map<Customer,CustomerDto>);
+
+            return Ok(customerDto);
         }
     
         // GET /api/customers/1
@@ -49,11 +51,8 @@ namespace HyMovieRental.Controllers.Api
             // to this customer object in the parameter
     
             if (!ModelState.IsValid)
-          
-=======
                 // this method implement IHttpActionResult 
                 return BadRequest();
->>>>>>> Stashed changes
 
             var customer = Mapper.Map<CustomerDto, Customer>(customerDto);
     
