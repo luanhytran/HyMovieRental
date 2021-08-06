@@ -18,8 +18,8 @@ namespace HyMovieRental.Controllers.Api
             _context = new ApplicationDbContext();
         }
     
-        // GET /api/customers
         // Because we return a list of object, this action will response to below url by convention
+        // GET /api/customers
         public IHttpActionResult GetCustomers()
         {
             // Pass in .Select() a delegate and does the mapping
