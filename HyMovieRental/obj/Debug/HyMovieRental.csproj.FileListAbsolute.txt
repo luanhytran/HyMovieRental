@@ -353,3 +353,5 @@ D:\GitHub\HyMovieRental\HyMovieRental\bin\System.Web.Http.WebHost.dll
 D:\GitHub\HyMovieRental\HyMovieRental\bin\System.Net.Http.Formatting.xml
 D:\GitHub\HyMovieRental\HyMovieRental\bin\System.Web.Http.xml
 D:\GitHub\HyMovieRental\HyMovieRental\bin\System.Web.Http.WebHost.xml
+D:\GitHub\HyMovieRental\HyMovieRental\bin\AutoMapper.dll
+D:\GitHub\HyMovieRental\HyMovieRental\bin\AutoMapper.xml

@@ -1,10 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Web;
+using HyMovieRental.Models;
 
-namespace HyMovieRental.Models
+namespace HyMovieRental.Dtos
 {
-    public class Customer
+    public class CustomerDto
     {
         public int Id { get; set; }
 
@@ -12,15 +16,11 @@ namespace HyMovieRental.Models
         [StringLength(255)]
         public string Name { get; set; }
 
-        // navigation property
-        public MembershipType MembershipType { get; set; }
-
         // foreign key
-        [DisplayName("Membership Type")]
         public byte MembershipTypeId { get; set; }
+
         public bool IsSubscribedToNewsLetter { get; set; }
 
-        [DisplayName("Date of Birth")]
         [Min18YearsIfAMember]
         public DateTime? Birthdate { get; set; }
     }
