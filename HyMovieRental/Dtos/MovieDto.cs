@@ -20,10 +20,10 @@ namespace HyMovieRental.Dtos
         public byte GenreId { get; set; }
 
         [Required]
-        public DateTime ReleaseDate { get; set; }
+        public DateTime? ReleaseDate { get; set; }
 
         [Required]
-        public DateTime DateAdded { get; set; }
+        public DateTime? DateAdded { get; set; }
 
         [Required]
         [Range(1, 20)]
