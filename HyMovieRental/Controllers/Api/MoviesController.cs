@@ -71,7 +71,10 @@ namespace HyMovieRental.Controllers.Api
             if (movieInDb == null)
                 return NotFound();
 
-            Mapper.Map<MovieDto, Movie>(movieDto, movieInDb);
+            // When you delete id property in JSON, this line will prevent Id = 0
+            movieDto.Id = id;
+
+            Mapper.Map(movieDto, movieInDb);
             _context.SaveChanges();
 
             return Ok();

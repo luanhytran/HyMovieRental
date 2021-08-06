@@ -80,12 +80,15 @@ namespace HyMovieRental.Controllers.Api
     
             if (customerInDb == null)
                 return NotFound();
-    
+
+            // When you delete id property in JSON, this line will prevent Id = 0
+            customerDto.Id = id;
+
             //customerInDb.Name = customer.Name;
             //customerInDb.Birthdate = customer.Birthdate;
             //customerInDb.MembershipTypeId = customer.MembershipTypeId;
             //customerInDb.IsSubscribedToNewsLetter = customer.IsSubscribedToNewsLetter;
-    
+
             // AutoMapper solve the above manual mapping
             // This code is shortcut for mapping the customerDto to customer type and assign it to customerInDb
             // Original way: customerInDb = Mapper.Map<CustomerDto,Customer>(customerDto);
