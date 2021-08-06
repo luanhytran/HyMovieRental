@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Web.Http;
 using AutoMapper;
 using HyMovieRental.Dtos;
 using HyMovieRental.Models;
-using Microsoft.Owin.Security;
 
 namespace HyMovieRental.Controllers.Api
 {
@@ -50,6 +47,7 @@ namespace HyMovieRental.Controllers.Api
             // to this customer object in the parameter
 
             if (!ModelState.IsValid)
+                // this method implement IHttpActionResult 
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
 
             var customer = Mapper.Map<CustomerDto, Customer>(customerDto);
@@ -57,10 +55,10 @@ namespace HyMovieRental.Controllers.Api
             _context.Customers.Add(customer);
             _context.SaveChanges();
 
+            // At this point the Id property of the customer will be set 
+            // base on the id generated from the db, now we the customerDto object that have Id property
             customerDto.Id = customer.Id;
 
-            // At this point the Id property of the customer will be set 
-            // base on the id generated from the db, now we return this object that have Id property
             return customerDto;
         }
 
