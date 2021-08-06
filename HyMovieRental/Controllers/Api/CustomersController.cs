@@ -47,7 +47,6 @@ namespace HyMovieRental.Controllers.Api
             // to this customer object in the parameter
 
             if (!ModelState.IsValid)
-                // this method implement IHttpActionResult 
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
 
             var customer = Mapper.Map<CustomerDto, Customer>(customerDto);
