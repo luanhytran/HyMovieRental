@@ -21,7 +21,7 @@ namespace HyMovieRental.Dtos
 
         public bool IsSubscribedToNewsLetter { get; set; }
 
-        [Min18YearsIfAMember]
+        //[Min18YearsIfAMember]
         public DateTime? Birthdate { get; set; }
     }
 }
