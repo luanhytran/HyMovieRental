@@ -14,6 +14,10 @@ namespace HyMovieRental.App_Start
             // .ForMember(...) purpose is to prevent when we create or update customer we accidentally changed the Id to another Id
             // it's mission is simply ignore the Id property when you send POST or PUT request to update the customer
             Mapper.CreateMap<CustomerDto, Customer>().ForMember(c => c.Id, opt => opt.Ignore());
+            
+            Mapper.CreateMap<MembershipType, MembershipTypeDto>();
+
+            Mapper.CreateMap<Genre, GenreDto>();
 
             Mapper.CreateMap<Movie, MovieDto>();
             Mapper.CreateMap<MovieDto, Movie>();

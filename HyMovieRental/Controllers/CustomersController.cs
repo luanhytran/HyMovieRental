@@ -90,15 +90,14 @@ namespace HyMovieRental.Controllers
         // GET: Customers
         public ActionResult Index()
         {
-            // By default EF only load customer objects, not their related objects
-            // We want to include MembershipType object so we need to include it
-            // This technique is eager loading
-            var customers = _context.Customers.Include(c => c.MembershipType).ToList();
-            return View(customers);
+            return View();
         }
 
         public ActionResult Detail(int id)
         {
+            // By default EF only load customer objects, not their related objects
+            // We want to include MembershipType object so we need to include it
+            // This technique is eager loading
             var customer = _context.Customers.Include(c => c.MembershipType).SingleOrDefault(x => x.Id == id);
 
             if (customer == null)

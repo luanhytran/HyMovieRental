@@ -15,11 +15,11 @@ namespace HyMovieRental.Models
         [StringLength(255)]
         public string Name { get; set; }
 
-        public Genre Genre { get; set; }
-
         [Required]
         [DisplayName("Genre")]
         public byte GenreId { get; set; }
+
+        public Genre Genre { get; set; }
 
         [Required]
         [DisplayName("Release Date")]

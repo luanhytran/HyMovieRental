@@ -19,6 +19,8 @@ namespace HyMovieRental.Dtos
         // foreign key
         public byte MembershipTypeId { get; set; }
 
+        public MembershipTypeDto MembershipType { get; set; }
+
         public bool IsSubscribedToNewsLetter { get; set; }
 
         //[Min18YearsIfAMember]

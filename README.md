@@ -1,2 +1,0 @@
-# hy-movie-rental
- 
