@@ -240,6 +240,10 @@
     <Compile Include="Migrations\202108051017096_ChangeNumberInStockToByte.designer.cs">
       <DependentUpon>202108051017096_ChangeNumberInStockToByte.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202108271012072_SeedUsers.cs" />
+    <Compile Include="Migrations\202108271012072_SeedUsers.designer.cs">
+      <DependentUpon>202108271012072_SeedUsers.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Customer.cs" />
@@ -545,6 +549,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202108051017096_ChangeNumberInStockToByte.resx">
       <DependentUpon>202108051017096_ChangeNumberInStockToByte.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202108271012072_SeedUsers.resx">
+      <DependentUpon>202108271012072_SeedUsers.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

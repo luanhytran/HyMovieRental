@@ -144,7 +144,44 @@ Open Account Controller and go to Register method, we going to modify the logic 
 
 Now register a new user with admin name, now we have a user with Store Manager role that Can Manage Movies. After register successfully we removed the `//Temp code` section.
 
+**Step 3:** Seed users
 
+We create new migration call `SeedUsers` and write SQL query for creating seed data in that migration, after done code like below, remember to delete the corresponding data in the database then we `update-database`. These SQL queries can be generate by follow this https://dzone.com/articles/generate-database-scripts-with-data-in-sql-server
+
+```c#
+namespace HyMovieRental.Migrations
+{
+    using System;
+    using System.Data.Entity.Migrations;
+    
+    public partial class SeedUsers : DbMigration
+    {
+        public override void Up()
+        {
+            Sql(@"
+INSERT [dbo].[AspNetUsers] ([Id], [Email], [EmailConfirmed], [PasswordHash], [SecurityStamp], [PhoneNumber], [PhoneNumberConfirmed], [TwoFactorEnabled], [LockoutEndDateUtc], [LockoutEnabled], [AccessFailedCount], [UserName]) VALUES (N'78a76a08-753f-4fa3-b87c-fa5b463d90e4', N'admin@hymovierental.com', 0, N'ACkQnuq9a6LWmir63R/Uwn18WsyvINSGiT8ezvYRwT5onjOQlrSQVFseNMGBPlNHsw==', N'eb59b4f5-7d22-4f9a-8e4a-f86d61e50008', NULL, 0, 0, NULL, 1, 0, N'admin@hymovierental.com')
+INSERT [dbo].[AspNetUsers] ([Id], [Email], [EmailConfirmed], [PasswordHash], [SecurityStamp], [PhoneNumber], [PhoneNumberConfirmed], [TwoFactorEnabled], [LockoutEndDateUtc], [LockoutEnabled], [AccessFailedCount], [UserName]) VALUES (N'c6fb057e-39ae-486e-988e-a7b3c26e2078', N'guest@hymovierental.com', 0, N'AFeZlcdEileYS3yuRWDIXOtPFLoRk9LRmBg5MFNjvvbN2FVpGljGvz/en5OUU+8HdA==', N'446af46f-830f-429b-9369-c106213adf1b', NULL, 0, 0, NULL, 1, 0, N'guest@hymovierental.com')
+
+INSERT [dbo].[AspNetRoles] ([Id], [Name]) VALUES (N'392da8a2-f135-45bb-9e42-ec3ac37b50c4', N'CanManageMovies')
+
+INSERT [dbo].[AspNetUserRoles] ([UserId], [RoleId]) VALUES (N'78a76a08-753f-4fa3-b87c-fa5b463d90e4', N'392da8a2-f135-45bb-9e42-ec3ac37b50c4')
+");
+        }
+        
+        public override void Down()
+        {
+        }
+    }
+}
+```
+
+The beauty of this approach is that if you run this migration on another database, let say our testing or production database we will have the exact same setup so this is the proper way to seed our database with users and role.
+
+ASP.NET website have a tutorial the show us how to seed users and role too but that is a poor way to do this. Here is a example:
+
+![image-20210827172020394](https://raw.githubusercontent.com/luanhytran/img/master/image-20210827172020394.png)
+
+This tutorial tell us to use the Seed method of the configuration class of code-first migration to add users and role to the database. Basically, when we run `update-database` this seed method will get executed. We shouldn't use this because you are not going to executed `update-database` on your production database. If you want to do this you have to change the connection string in `web.cofig ` and then run `update-database` . But this is very risky, because if you forgot to change the connection string back to your development database, you gonna screw your production database. 
 
 ### Additional Reading  
 

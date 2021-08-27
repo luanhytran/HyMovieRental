@@ -355,3 +355,4 @@ D:\GitHub\HyMovieRental\HyMovieRental\bin\System.Web.Http.xml
 D:\GitHub\HyMovieRental\HyMovieRental\bin\System.Web.Http.WebHost.xml
 D:\GitHub\HyMovieRental\HyMovieRental\bin\AutoMapper.dll
 D:\GitHub\HyMovieRental\HyMovieRental\bin\AutoMapper.xml
+D:\GitHub\HyMovieRental\HyMovieRental\obj\Debug\HyMovieRental.Migrations.SeedUsers.resources
