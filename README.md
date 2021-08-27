@@ -1,5 +1,5 @@
 # asp-hy-movie-rental
-A simple Movie Rental website using ASP.NET MVC 5
+A simple CRUD Movie Rental website using ASP.NET MVC 5
 
 It suppose to be use at video rental store
 
