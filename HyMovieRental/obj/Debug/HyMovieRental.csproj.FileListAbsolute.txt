@@ -356,3 +356,8 @@ D:\GitHub\HyMovieRental\HyMovieRental\bin\System.Web.Http.WebHost.xml
 D:\GitHub\HyMovieRental\HyMovieRental\bin\AutoMapper.dll
 D:\GitHub\HyMovieRental\HyMovieRental\bin\AutoMapper.xml
 D:\GitHub\HyMovieRental\HyMovieRental\obj\Debug\HyMovieRental.Migrations.SeedUsers.resources
+D:\GitHub\HyMovieRental\HyMovieRental\bin\Glimpse.Ado.dll
+D:\GitHub\HyMovieRental\HyMovieRental\bin\Glimpse.AspNet.dll
+D:\GitHub\HyMovieRental\HyMovieRental\bin\Glimpse.Core.dll
+D:\GitHub\HyMovieRental\HyMovieRental\bin\Glimpse.EF6.dll
+D:\GitHub\HyMovieRental\HyMovieRental\bin\Glimpse.Mvc5.dll
