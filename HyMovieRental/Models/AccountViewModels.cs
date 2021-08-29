@@ -3,13 +3,6 @@ using System.ComponentModel.DataAnnotations;
 
 namespace HyMovieRental.Models
 {
-    public class ExternalLoginConfirmationViewModel
-    {
-        [Required]
-        [Display(Name = "Email")]
-        public string Email { get; set; }
-    }
-
     public class ExternalLoginListViewModel
     {
         public string ReturnUrl { get; set; }
@@ -79,6 +72,12 @@ namespace HyMovieRental.Models
         [Display(Name = "Confirm password")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
+
+        [DataType((DataType.PhoneNumber))]
+        [Required]
+        [Display(Name="Phone number")]
+        [RegularExpression(@"(84|0[3|5|7|8|9])+([0-9]{8})\b", ErrorMessage = "Not a valid phone number")]
+        public string PhoneNumber { get; set; }
     }
 
     public class ResetPasswordViewModel
