@@ -361,3 +361,5 @@ D:\GitHub\HyMovieRental\HyMovieRental\bin\Glimpse.AspNet.dll
 D:\GitHub\HyMovieRental\HyMovieRental\bin\Glimpse.Core.dll
 D:\GitHub\HyMovieRental\HyMovieRental\bin\Glimpse.EF6.dll
 D:\GitHub\HyMovieRental\HyMovieRental\bin\Glimpse.Mvc5.dll
+D:\GitHub\HyMovieRental\HyMovieRental\obj\Debug\HyMovieRental.Migrations.AddRentals.resources
+D:\GitHub\HyMovieRental\HyMovieRental\obj\Debug\HyMovieRental.Migrations.AddNumberAvailableToMovie.resources

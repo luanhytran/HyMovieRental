@@ -200,6 +200,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\Api\CustomersController.cs" />
     <Compile Include="Controllers\Api\MoviesController.cs" />
+    <Compile Include="Controllers\Api\NewRentalsController.cs" />
     <Compile Include="Controllers\CustomersController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
@@ -208,6 +209,7 @@
     <Compile Include="Dtos\GenreDto.cs" />
     <Compile Include="Dtos\MembershipTypeDto.cs" />
     <Compile Include="Dtos\MovieDto.cs" />
+    <Compile Include="Dtos\NewRentalDto.cs" />
     <Compile Include="GlimpseSecurityPolicy.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -260,6 +262,14 @@
     <Compile Include="Migrations\202108271012072_SeedUsers.designer.cs">
       <DependentUpon>202108271012072_SeedUsers.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202108310842130_AddRentals.cs" />
+    <Compile Include="Migrations\202108310842130_AddRentals.designer.cs">
+      <DependentUpon>202108310842130_AddRentals.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202108311102170_AddNumberAvailableToMovie.cs" />
+    <Compile Include="Migrations\202108311102170_AddNumberAvailableToMovie.designer.cs">
+      <DependentUpon>202108311102170_AddNumberAvailableToMovie.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ApplicationDbContext.cs" />
@@ -271,6 +281,7 @@
     <Compile Include="Models\MembershipType.cs" />
     <Compile Include="Models\Min18YearsIfAMember.cs" />
     <Compile Include="Models\Movie.cs" />
+    <Compile Include="Models\Rental.cs" />
     <Compile Include="Models\RoleName.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
@@ -572,6 +583,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202108271012072_SeedUsers.resx">
       <DependentUpon>202108271012072_SeedUsers.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202108310842130_AddRentals.resx">
+      <DependentUpon>202108310842130_AddRentals.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202108311102170_AddNumberAvailableToMovie.resx">
+      <DependentUpon>202108311102170_AddNumberAvailableToMovie.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

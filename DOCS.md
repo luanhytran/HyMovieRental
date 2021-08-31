@@ -372,11 +372,15 @@ In large organizations, you may want to create single sign-on between your inter
 
 ## Performance Optimization
 
-> "Premature optimization is the root of all evils"
->
-> *Donald Knuth - Computer scientist and professor at Stanford University*
+**Rules of thumb**
 
-Optimize only when you need to, otherwise you increase the development and maintenance cost without gaining anything. 
+- Do not sacrifice the maintainability of your code to premature optimization. 
+
+- Be realistic and think like an “engineer”.  
+
+- Be pragmatic and ensure your efforts have observable results and give value.  
+
+And remember: **premature optimization is the root of all evils.**
 
 **How to optimize?**
 
@@ -413,10 +417,10 @@ Performance problem in this tier are often of database schema and queries.
 
 Make sure all of your database has these when you work with legacy database (Database First):
 
-- Primary Keys
-- Relationships
-- Indexes
-  - Should use this on column that you use for filter records in your queries.
+- Every table must have a primary key. 
+- Tables should have relationships. 
+- Put indexes on columns where you filter records on. But remember: too many  indexes can have an adverse impact on the performance.  
+- Avoid Entity-Attribute-Value (EAV) pattern.
 
 Your first point in optimization is fix these issues in your database schema.
 
@@ -442,12 +446,11 @@ So it good to keep an eye on EF queries, if it too complex, it better to create 
 
 Some method to Optimizing Queries when it slow:
 
-- Use Execution Plan in SQL Server
+- Keep an eye on EF queries using Glimpse. If a query is slow, use a stored  procedure. 
+- Use Execution Plan in SQL Server to find performance bottlenecks in your  queries.
   - Which show how SQL Server execute your queries so you can see which part of the query have biggest cost and you can optimize it.
-- Create a "read" database (look up CQRS)
-  - Use this if your team got the right skills and tools.
-- Use caching
 
+If after all your optimizations, you still have slow queries, consider creating a  denormalised “read” database for your queries. But remember, this comes with the cost  of maintaining two databases in sync. A simpler approach is to use caching.
 #### Glimpse
 
 This is a tool to get real time diagnostic inside our app.
@@ -545,20 +548,21 @@ If you find an EF query slow, then you can optimize by creating a Store Procedur
 
 ### Application Tier
 
-#### Output Cache
-
 Assume that our database schema and queries are in the right shape and form. Now we go to the middle tier (Application Tier). There are number of technique that we can optimize this tier.
 
 ![image-20210829145355982](https://raw.githubusercontent.com/luanhytran/img/master/image-20210829145355982.png)
 
-- Output Caching
-  - This method will give us the most optimization gain.
+#### Output Cache
+
+- On pages where you have costly queries on data that doesn’t change frequently,  use **OutputCache** to cache the rendered HTML.
 
 The main purpose of using Output Caching is to dramatically improve the performance of an ASP.NET MVC Application. It enables us to cache the content returned by any controller method so that the same content does not need to be generated each time the same controller method is invoked. Output Caching has huge advantages, such as it reduces server round trips, reduces database server round trips, reduces network traffic etc.
 
 Implement: [Output Caching in MVC (c-sharpcorner.com)](https://www.c-sharpcorner.com/UploadFile/abhikumarvatsa/output-caching-in-mvc/)
 
 #### Data Cache
+
+- You can also store the results of the query in cache (using **MemoryCache**), but  use this approach only in actions that are used for displaying data, not modifying  it.
 
 Some time we may want to cache a piece of data, not HTML . For example you want to we want to cache a list of Genres we code like this. So the first time someone hit this endpoint, we'll get the genre from the db and then store it in the cache and all the subsequent request will get data from the cache.
 
@@ -572,6 +576,28 @@ Don't use this approach blindly to improve the performance of your app. Unfortun
 - It will lead to unnecessary complex in both architecture level and code level especially when you working with EF.
 
 Only use Data Cache to display data, not modifying data.
+
+**Use Data Caching with Expensive Queries**  
+
+In the demo, I stored the list of genres in the cache. Getting the list of genres would  issue a **“SELECT * FROM Genres”** query to the database, and given that this is a  simple and fast query, caching the result would just waste server’s resources.  
+
+Use data caching for complex queries over large tables that take several seconds to  execute. This way, you can argue that using additional memory on the server can be  better (but not necessarily) than querying your database several times. You need to  profile **before and after** your optimization to ensure your assumptions are correct and  are not based on some theory you read in a book or tutorial.
+
+**MemoryCache.Add()**
+
+If you want to have more control over the objects you put in their cache, it’s better to use  the Add method of MemoryCache class.
+
+```c#
+MemoryCache.Default.Add(
+				new	CacheItem(“Key”,	value),	
+				cacheItemPolicy);
+```
+
+As you see, the second argument to this method is a **cacheItemPolicy** object. With this  object you can set the expiration date/time (both absolute and sliding) and you can also  register callbacks to be called when the item is removed from the cache.
+
+You can read more about this class on MSDN:
+
+[MemoryCache.Add(CacheItem, CacheItemPolicy) Method (System.Runtime.Caching) | Microsoft Docs](https://docs.microsoft.com/en-us/dotnet/api/system.runtime.caching.memorycache.add?redirectedfrom=MSDN&view=dotnet-plat-ext-5.0#overloads)
 
 #### Async
 
@@ -663,11 +689,69 @@ We can apply these principle in certain area:
 
 ### Chrome Developer Tools Tip
 
-Disable cache so we see all file are sent from the server to the client, prevent the case we don't see some file because it in the cache, so we Disable cache.
+As we working with bundle and observing the total number of requests and the total response size, we have unreliable result. If that happen, that mean our browser are cache some of the requests. So we may switch to release mode and notice the bundle size are actually larger than before. Disable cache will be useful as we developing and debugging our app.
 
 ![image-20210829204845894](https://raw.githubusercontent.com/luanhytran/img/master/image-20210829204845894.png)
 
 ## Building a Feature End-to-End Systematically
+
+This section show a systematically approach to build any features or entire app end-to-end. We will add the ability to record Rentals.
+
+#### Understanding the Problem
+
+The first step to build software is understand what problem we are trying to solve.
+
+**Example:** 
+
+We want to extend our app by Add the ability to record rentals. Before start coding we need to understand how this use case work so we need to talk to the client or who we build this application for and ask them question to better understand the use case.
+
+The customer come to the counter and give the movie to the staff member, this staff member identify the customer by looking them up in the app and then add each movie in the list of movies that customer gonna rent .
+
+To implement this, it better to start from Back-end then to Front-end. As a software engineer, you should focus on the big picture first then the small detail later.
+
+In the real-world, video rental store usually don't have output. 
+
+![image-20210829232623971](https://raw.githubusercontent.com/luanhytran/img/master/image-20210829232623971.png)
+
+On the Back-end we need an action for Front-end to call later on. We can put this action in 1 of this 2 places, it depend on what you want to return to the client once the form is submitted.
+
+![image-20210829232606818](https://raw.githubusercontent.com/luanhytran/img/master/image-20210829232606818.png)
+
+Put action in API controller have advantage, that is we can have multiple Front-end type like mobile, SPA.. able to connect to this API.
+
+#### Domain Modelling
+
+We use UML to modelling the domain
+
+![image-20210831105439646](https://raw.githubusercontent.com/luanhytran/img/master/image-20210831105439646.png)
+
+#### Building the Simplest API
+
+When it come to implementation, it best to start with the happy path. Forget about all the edge case and validation stuff at the beginning because you can easily get distracted and get stuck in an endless loop.
+
+#### Adding the Details
+
+#### Edge Cases
+
+![image-20210831180504071](https://raw.githubusercontent.com/luanhytran/img/master/image-20210831180504071.png)
+
+#### Building the Front-end
+
+
+
+#### Adding Auto-completion
+
+#### Updating the DOM
+
+#### Improving the Look and Feel
+
+#### Filtering Records
+
+#### Submitting the Form
+
+#### Displaying Toast Notifications
+
+#### Implementing Client-side Validation
 
 ## Deployment
 

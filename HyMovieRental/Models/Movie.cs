@@ -32,5 +32,8 @@ namespace HyMovieRental.Models
         [Range(1, 20)]
         [DisplayName("Number in Stock")]
         public byte NumberInStock { get; set; }
+
+        [Display(Name = "Number available")]
+        public byte NumberAvailable { get; set; }
     }
 }

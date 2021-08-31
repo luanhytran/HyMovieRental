@@ -55,8 +55,8 @@ namespace HyMovieRental
             //   consumerSecret: "");
 
             app.UseFacebookAuthentication(
-               appId: "12345",
-               appSecret: "abcde");
+               appId: "847423532578925",
+               appSecret: "bc1dfff1c909cbe55cf5693ea8376885");
 
             //app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
             //{
