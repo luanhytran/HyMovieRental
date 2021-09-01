@@ -695,7 +695,11 @@ As we working with bundle and observing the total number of requests and the tot
 
 ## Building a Feature End-to-End Systematically
 
-This section show a systematically approach to build any features or entire app end-to-end. We will add the ability to record Rentals.
+This section show a systematically approach to build any features or entire app end-to-end. We will add the ability to record Rentals. 
+
+With this approach, we  can solve if not most problem out there.
+
+![image-20210901174157173](https://raw.githubusercontent.com/luanhytran/img/master/image-20210901174157173.png)
 
 #### Understanding the Problem
 
@@ -1136,13 +1140,34 @@ Result:
 
 ## Deployment
 
+
+
 # Client-side
 
-We use jQuery and AJAX to consume API we build
+## What is AJAX?
 
-Basic jQuery: [jQuery Tutorial for Beginners: Nothing But the Goods - Impressive Webs](https://www.impressivewebs.com/jquery-tutorial-for-beginners/)
+What is AJAX?  AJAX is a fancy name for a simple concept. It’s a group of technologies that allow us to  call the server asynchronously and update the content of the page.
+
+In contrast to the traditional HTML forms for posting data to the server, when using  AJAX, the user stays on the same page, we call the server in the background, and then  refresh the content of the page. This gives a faster and smoother experience to the end  user. We can even load an entirely new page in the content area and this gives the user  the illusion that they’re on a new page.  
+
+AJAX is one of the technologies heavily used by Single Page Applications (SPAs). As  the user clicks on a link, we call the server in the background, get the data for the target  page, generate the mark up on the client, and use JavaScript to refresh the content  area.  
+
+So, AJAX stands for Asynchronous JavaScript and XML. Every browser has a native  object called **XMLHttpRequest** (XHR) that allows us to call the server asynchronously  (in the background, without posting the page to the server using a form). We can use  methods of this object directly, or use jQuery AJAX, which is an abstraction over this  object, and makes it easier to make asynchronous calls to the server:  
+
+```javascript
+$.ajax(url) 
+.done(function(result){ 			
+    //	Do	something	with	the	result 
+});
+```
+
+The result from the server can be anything. It can be XML, HTML markup, or JSON  data. These days it’s more often to get data from the server and generate HTML markup  on the client. That’s why AJAX is very common when working with web APIs.  
+
+When we get the data, we can use JavaScript to update the Document Object Model  (DOM) and refresh the content of the page. That’s AJAX!
 
 ## Calling an API Using jQuery
+
+We use jQuery and AJAX to consume API we build. Basic jQuery: [jQuery Tutorial for Beginners: Nothing But the Goods - Impressive Webs](https://www.impressivewebs.com/jquery-tutorial-for-beginners/)
 
 Delete a customer using jQuery and AJAX
 
@@ -1463,4 +1488,195 @@ If we have an object that have a lot of properties and the API return a thousand
 [(7) jQuery datatables server side processing example asp net - YouTube](https://www.youtube.com/watch?v=u4QKLehvUhs)
 
 
+
+# Deployment
+
+## Deploying the Application
+
+In solution explorer, right click the project and chose `Publish`
+
+![image-20210901181754030](https://raw.githubusercontent.com/luanhytran/img/master/image-20210901181754030.png)
+
+We have this concept call Publish Profile, so depending on where we gonna deploy our app to, we can create a profile that include all the settings. With this next time we want to deploy again, we can select the profile so we don't have to fill out all the settings again.
+
+
+
+In the above page you see we have 6 public target
+
+- Folder
+
+  ![image-20210902001912456](https://raw.githubusercontent.com/luanhytran/img/master/image-20210902001912456.png)
+
+  - Use to create a profile from scratch, the most use Publish method in this option is FTP and File System.
+  - Web Deploy: only work if the target IIS is configured to support this. So it require a few administrative task on the target Window Server and with this we can deploy directly to an IIS website.
+  - Web Deploy Package: is the same as Web Deploy except that it doesn't deploy directly to IIS. It create a zip package that can later be use by different processes to deploy to IIS.
+
+- Import Profile
+  - Useful when there is an existing public profile you want to use. Some webhost company may give you a public profile.
+
+
+
+**Publish project**
+
+**Step 1:**
+
+![image-20210902002454053](https://raw.githubusercontent.com/luanhytran/img/master/image-20210902002454053.png)
+
+**Step 2:** Specify the deploy file output
+
+![image-20210902002533823](https://raw.githubusercontent.com/luanhytran/img/master/image-20210902002533823.png)
+
+**Step 3:**
+
+![image-20210902002701150](https://raw.githubusercontent.com/luanhytran/img/master/image-20210902002701150.png)
+
+**Step 4:**
+
+![image-20210902002753615](https://raw.githubusercontent.com/luanhytran/img/master/image-20210902002753615.png)
+
+**Step 5:**
+
+When we deploying to production, we use the release mode. 
+
+![image-20210902002817502](https://raw.githubusercontent.com/luanhytran/img/master/image-20210902002817502.png)
+
+Later in this section we can create other configurations for example specific configuration  for your testing or staging environments and then they will be populated here.
+
+![image-20210902003117148](https://raw.githubusercontent.com/luanhytran/img/master/image-20210902003117148.png)
+
+We can see the message Database publishing is not supported for this publish method. 
+
+Database support are support in Web Deploy Publish method, we can Execute Code First Migrations. With this when your application startup, it auto run all pending code-first migrations on the db. So no matter what version your db at, it will auto be migrate to the latest version. This is a great productivity booster because you don't have to do anything extra for deploying your db. But not all team are confident with this approach, in a lot of places you have to create SQL script to migrate your database and then either give it to a DBA that responsible for that or import it to the existing homemade database deployment tool.
+
+**Step 6:**
+
+![image-20210902002833582](https://raw.githubusercontent.com/luanhytran/img/master/image-20210902002833582.png)
+
+**Result:**
+
+bin folder include the assemblies for our application including `HyMovieRental.dll` which is a compilation of our C# code.
+
+![image-20210902002850450](https://raw.githubusercontent.com/luanhytran/img/master/image-20210902002850450.png)
+
+## Deploying the Database
+
+Unless you using Web Deploy as your publish method and running code-first migrations as part of your deployment. You have to deploy your db manually.
+
+
+
+We open Package Manager Console and enter this:
+
+```powershell
+update-database -script
+```
+
+With this line of command, instead of updating your db, it will get a SQL script that include all migrations in our application. This is useful when you deploy your db for the first time.
+
+
+
+**Create SQL Script even though there is no pending migrations**
+
+In the case we want to create the SQL script even though there is no pending migration which will not work with the above command or create SQL script from a specific migrations to the end, we enter this code and supply the migration we want to start for `-SourceMigration:`
+
+```powershell
+update-database -script -SourceMigration:
+```
+
+
+
+## Build Configurations
+
+Imagine we want to create a build configurations for testing or staging environment. In this environment we probably have different settings like: connection string can be different,  application settings can be different, a different mail server... 
+
+
+
+**Create build configurations for testing environment**
+
+On toolbar select this.
+
+![image-20210901184352349](https://raw.githubusercontent.com/luanhytran/img/master/image-20210901184352349.png)
+
+Select New
+
+![image-20210901184451581](https://raw.githubusercontent.com/luanhytran/img/master/image-20210901184451581.png)
+
+Create a new build configurations for testing environment
+
+![image-20210901184555230](https://raw.githubusercontent.com/luanhytran/img/master/image-20210901184555230.png)
+
+For any environment like testing, staging and production. We copy the setting from release build, leave debug only for developing and use it only on your development server.
+
+![image-20210901184720182](https://raw.githubusercontent.com/luanhytran/img/master/image-20210901184720182.png)
+
+Click Ok then Close.
+
+
+
+Now we have a new build configurations, if we go to solution explorer and right click `Web.config`  , you see a new item here. We click it.
+
+![image-20210902004749986](https://raw.githubusercontent.com/luanhytran/img/master/image-20210902004749986.png)
+
+
+
+Now we have the new config file here
+
+![image-20210902004822529](https://raw.githubusercontent.com/luanhytran/img/master/image-20210902004822529.png)
+
+As a example,  we can comment out the connection string here
+
+![image-20210902004900151](https://raw.githubusercontent.com/luanhytran/img/master/image-20210902004900151.png)
+
+This will override our connection string to our db, 
+
+![image-20210902004941687](https://raw.githubusercontent.com/luanhytran/img/master/image-20210902004941687.png)
+
+We change the name to `DefaultConnection` because our parent `Web.config` use this name for the connection string too.
+
+![image-20210902005038552](https://raw.githubusercontent.com/luanhytran/img/master/image-20210902005038552.png)
+
+When we deploy our app this configuration will transform our parent `Web.config` , so in here we can add any other settings that are specific to our testing environment.
+
+ Now we can publish this project with the configuration for `Testing` environment.
+
+![image-20210902005530263](https://raw.githubusercontent.com/luanhytran/img/master/image-20210902005530263.png)
+
+Then we open the `Web.config` file in this publish folder, the connection string is pointing to `ReleaseSQLServer` . 
+
+![image-20210902005732048](https://raw.githubusercontent.com/luanhytran/img/master/image-20210902005732048.png)
+
+So this is how build configurations work!
+
+We can rename the Profile name 
+
+![image-20210902010419360](https://raw.githubusercontent.com/luanhytran/img/master/image-20210902010419360.png)
+
+After rename, go to Properties > PublishProfiles you see we have 2 different profiles so image `GoDaddyProfile` is for production deployment and `Testing` is for deploy to the testing environment. 
+
+![image-20210902010405074](https://raw.githubusercontent.com/luanhytran/img/master/image-20210902010405074.png)
+
+Both this file are just XML that include the settings for each deployment environment 
+
+![image-20210902010905540](https://raw.githubusercontent.com/luanhytran/img/master/image-20210902010905540.png)
+
+And when you check this in your source control, all this publish profiles are available to all devs in the team. So next time someone want to deploy, they just need to click Publish the project and select the right profile and then do the deployment
+
+![image-20210902011042617](https://raw.githubusercontent.com/luanhytran/img/master/image-20210902011042617.png)
+
+## Application Settings
+
+
+
+## Securing Configuration Settings
+
+
+
+## Custom Error Pages
+
+
+
+## Logging Unhandled Exceptions
+
+
+
+## Final Touch
 
