@@ -737,21 +737,301 @@ When it come to implementation, it best to start with the happy path. Forget abo
 
 #### Building the Front-end
 
+We use AJAX to submit the form the improve UX.
 
+**Zencoding**
+
+Install Web Essentials Plug-in we get this feature
+
+![image-20210831183610591](https://raw.githubusercontent.com/luanhytran/img/master/image-20210831183610591.png)
 
 #### Adding Auto-completion
 
+**Install auto-completion library** 
+
+After install then add it in `BundleConfig.cs`
+
+```powershell
+install-package Twitter.Typeahead
+```
+
+![image-20210831185107046](https://raw.githubusercontent.com/luanhytran/img/master/image-20210831185107046.png)
+
+
+
+**Add CSS**
+
+Create a CSS file call `typeahead.css` and add CSS from this https://twitter.github.io/typeahead.js/css/examples.css, this is the CSS file of https://twitter.github.io/typeahead.js/examples/ , we click View Page Source then click in the CSS source
+
+```css
+.tt-hint {
+    color: #999
+}
+
+.tt-menu {
+    width: 422px;
+    margin: 12px 0;
+    padding: 8px 0;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    border-radius: 8px;
+    -webkit-box-shadow: 0 5px 10px rgba(0,0,0,.2);
+    -moz-box-shadow: 0 5px 10px rgba(0,0,0,.2);
+    box-shadow: 0 5px 10px rgba(0,0,0,.2);
+}
+
+.tt-suggestion {
+    padding: 3px 20px;
+    font-size: 18px;
+    line-height: 24px;
+}
+
+.tt-suggestion:hover {
+    cursor: pointer;
+    color: #fff;
+    background-color: #0097cf;
+}
+
+.tt-suggestion.tt-cursor {
+    color: #fff;
+    background-color: #0097cf;
+}
+
+.tt-suggestion p {
+    margin: 0;
+}
+```
+
+Then add this CSS file that we created to bundle
+
+![image-20210831192207503](https://raw.githubusercontent.com/luanhytran/img/master/image-20210831192207503.png)
+
+
+
+**Add Js code**
+
+Now go to the view we want to use this lib then add this template code from the lib docs, and change data correspond to our response from the server 
+
+```javascript
+var bestPictures = new Bloodhound({
+  datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
+  queryTokenizer: Bloodhound.tokenizers.whitespace,
+  prefetch: '../data/films/post_1960.json',
+  remote: {
+    url: '../data/films/queries/%QUERY.json',
+    wildcard: '%QUERY'
+  }
+});
+
+$('#remote .typeahead').typeahead(null, {
+  name: 'best-pictures',
+  display: 'value',
+  source: bestPictures
+});
+```
+
+This is a example in our project, use typeahead to find the customer name with the customer API.
+
+```javascript
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            // This is view model for the rental form, later we use this to post to the server
+            var vm = {};
+
+            var customers = new Bloodhound({
+                datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+                queryTokenizer: Bloodhound.tokenizers.whitespace,
+                remote: {
+                    url: '/api/customers?queries=%QUERY',
+                    wildcard: '%QUERY'
+                }
+            });
+
+            $('#customer').typeahead({
+                    minLength: 3,
+                    highlight: true
+                },
+                {
+                    name: 'customers',
+                    display: 'name',
+                    source: customers
+                }).on("typeahead:select",
+                // e: event, customer: the selected customer
+                function (e, customer) {
+                // logic for the select event of typeahead when we select a customer name
+                vm.customerId = customer.id;
+            });
+        });
+    </script>
+}
+```
+
+Remember to add Id to refer the input element you want to apply
+
+![image-20210831193642086](https://raw.githubusercontent.com/luanhytran/img/master/image-20210831193642086.png)
+
 #### Updating the DOM
+
+Create a place holder
+
+```html
+<ul id="movies" class="list-group"></ul>
+```
+
+
+
+jQuery code for updating the DOM
+
+```javascript
+var vm = {
+    movieIds: []
+};
+
+$('#movie').typeahead({
+    minLength: 3,
+    highlight: true
+},
+                      {
+    name: 'movies',
+    display: 'name',
+    source: movies
+}).on("typeahead:select",
+      function (e, movie) {
+    $("#movies").append("<li>" + movie.name + "</li>");
+
+    $("#movie").typeahead("val", "");
+
+    vm.movieIds.push(movie.id);
+});
+```
+
+
 
 #### Improving the Look and Feel
 
+
+
 #### Filtering Records
+
+Filter to show exactly the customer or movie have the same name in the suggest of typeahead.
+
+The `queries` will be pass in by typeahead, you can see this parameter is specify in the remote > url of the jQuery code of typeahead at the page you apply.
+
+```c#
+ // GET api/movies
+        public IHttpActionResult GetMovies(string queries = null)
+        {
+            var moviesQuery = _context.Movies.Include(m => m.Genre).Where(m=>m.NumberAvailable > 0);
+
+            if (!String.IsNullOrWhiteSpace(queries))
+                moviesQuery = moviesQuery.Where(m => m.Name.Contains(queries));
+
+            var movieDto = moviesQuery.ToList().Select(Mapper.Map<Movie, MovieDto>);
+
+            return Ok(movieDto);
+        }
+```
+
+
+
+```c#
+// GET /api/customers
+        public IHttpActionResult GetCustomers(string queries = null)
+        {
+            // customersQuery is IQueryable type so we can filter customer by name exactly when using typeahead 
+            var customersQuery = _context.Customers.Include(c=>c.MembershipType);
+
+            if (!String.IsNullOrWhiteSpace(queries))
+                customersQuery = customersQuery.Where(c => c.Name.Contains(queries));
+
+            // Pass in .Select() a delegate and does the mapping
+            // Map each Customer in the list to customerDto
+            var customerDtos = customersQuery.ToList().Select(Mapper.Map<Customer,CustomerDto>);
+
+            return Ok(customerDtos);
+        }
+```
+
+
 
 #### Submitting the Form
 
+Add id to the form element
+
+![image-20210901054329163](https://raw.githubusercontent.com/luanhytran/img/master/image-20210901054329163.png)
+
+
+
+Write jQuery code to handle the submit
+
+```c#
+// e: is the submit event
+            $('#newRental').submit(function (e) {
+                // we use AJAX, so we need to add this line to prevent submit as a traditional HTML form
+                e.preventDefault();
+
+                $.ajax({
+                    url: "/api/newRentals",
+                    method: "post",
+                    data: vm
+                })
+                .done(function() {
+                    console.log('done');
+                })
+                .fail(function() {
+
+                });
+            });
+```
+
+
+
 #### Displaying Toast Notifications
 
+Install jQuery Plug-in Toastr
+
+```powershell
+install-package toastr
+```
+
+
+
+Then add it in bundle
+
+![image-20210901055503866](https://raw.githubusercontent.com/luanhytran/img/master/image-20210901055503866.png)
+
+![image-20210901060127389](https://raw.githubusercontent.com/luanhytran/img/master/image-20210901060127389.png)
+
+
+
+Use it 
+
+![image-20210901055602742](https://raw.githubusercontent.com/luanhytran/img/master/image-20210901055602742.png)
+
+
+
 #### Implementing Client-side Validation
+
+Add this bundle
+
+![image-20210901154027501](https://raw.githubusercontent.com/luanhytran/img/master/image-20210901154027501.png)
+
+
+
+We use standard HTML Validation Attribute and jQuery validation Plug-in understand this.
+
+![image-20210901154140450](https://raw.githubusercontent.com/luanhytran/img/master/image-20210901154140450.png)
+
+
+
+Add the validation plug-in in the jQuery code that handle the submit form event
+
+
 
 ## Deployment
 

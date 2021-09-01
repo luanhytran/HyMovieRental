@@ -21,13 +21,19 @@ namespace HyMovieRental.Controllers.Api
     
         // Because we return a list of object, this action will response to below url by convention
         // GET /api/customers
-        public IHttpActionResult GetCustomers()
+        public IHttpActionResult GetCustomers(string queries = null)
         {
+            // customersQuery is IQueryable type so we can filter customer by name exactly when using typeahead 
+            var customersQuery = _context.Customers.Include(c=>c.MembershipType);
+
+            if (!String.IsNullOrWhiteSpace(queries))
+                customersQuery = customersQuery.Where(c => c.Name.Contains(queries));
+
             // Pass in .Select() a delegate and does the mapping
             // Map each Customer in the list to customerDto
-            var customerDto = _context.Customers.Include(c=>c.MembershipType).ToList().Select(Mapper.Map<Customer,CustomerDto>);
+            var customerDtos = customersQuery.ToList().Select(Mapper.Map<Customer,CustomerDto>);
 
-            return Ok(customerDto);
+            return Ok(customerDtos);
         }
     
         // GET /api/customers/1

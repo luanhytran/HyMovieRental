@@ -13,7 +13,9 @@ namespace HyMovieRental
                         "~/Scripts/bootstrap.js",
                         "~/scripts/bootbox.js",
                         "~/scripts/datatables/jquery.datatables.js",
-                        "~/scripts/datatables/datatables.bootstrap.js"
+                        "~/scripts/datatables/datatables.bootstrap.js",
+                        "~/scripts/typeahead.bundle.js",
+                        "~/scripts/toastr.js"
                 ));
 
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
@@ -27,7 +29,10 @@ namespace HyMovieRental
             bundles.Add(new StyleBundle("~/Content/css").Include(
                 "~/Content/bootstrap-lumen.css",
                 "~/content/datatables/css/datatables.bootstrap.css",
-                "~/Content/Site.css"));
+                "~/content/typeahead.css",
+                "~/content/toastr.css",
+                "~/Content/Site.css"
+                ));
         }
     }
 }
