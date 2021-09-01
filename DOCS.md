@@ -1025,13 +1025,114 @@ Add this bundle
 
 We use standard HTML Validation Attribute and jQuery validation Plug-in understand this.
 
-![image-20210901154140450](https://raw.githubusercontent.com/luanhytran/img/master/image-20210901154140450.png)
+
 
 
 
 Add the validation plug-in in the jQuery code that handle the submit form event
 
+```javascript
+// submit handler and validate for the form
+            $("#newRental").validate({
+                submitHandler: function () {
+                    // e: is the submit event
+                    // we use AJAX, so we need to add this line to prevent submit as a traditional HTML form
+                    e.preventDefault();
 
+                    $.ajax({
+                            url: "/api/newRentals",
+                            method: "post",
+                            data: vm
+                        })
+                        .done(function () {
+                            toastr.success("Rentals successfully recorded.");
+                        })
+                        .fail(function () {
+                            toastr.error("Something unexpected happened.");
+                        });
+                }
+            });
+```
+
+
+
+Add CSS to style the input border to red and the error message to red
+
+```css
+.field-validation-error,
+label.error
+{
+    color: red;
+}
+
+.input-validation-error,
+input.error
+{
+    border: 2px solid red;
+}
+```
+
+Result:
+
+![image-20210901160155409](https://raw.githubusercontent.com/luanhytran/img/master/image-20210901160155409.png)
+
+
+
+Create custom validator to handle the case user have to enter a valid name that exist in database. Add this code above the `$("#newRental").validate(...)`
+
+```javascript
+// specify the name for the custom validation attribute
+            $.validator.addMethod("validCustomer",function () {
+                // make sure our vm have customerId property and this property have numeric value != 0
+                return vm.customerId && vm.customerId !== 0;
+            },
+                // error message
+                "Please select a valid customer.");
+
+            $.validator.addMethod("movieSelected",
+                function () {
+                    // everything with a value will be true, if this array empty then false
+                    return vm.movieIds.length > 0; 
+                }, "Please select at least one movie.");
+
+            // submit handler and validate for the form
+            var validator = $("#newRental").validate({
+                rules: {
+                    customer: { validCustomer: true },
+                    movie: { movieSelected: true }
+                },
+                submitHandler: function () {
+                    // e: is the submit event
+                    // we use AJAX, so we need to add this line to prevent submit as a traditional HTML form
+                    $.ajax({
+                        url: "/api/newRentals",
+                        method: "post",
+                        data: vm
+                    })
+                        .done(function () {
+                            toastr.success("Rentals successfully recorded.");
+                            $("#customer").typeahead('val', '');
+                            $("#movie").typeahead('val', '');
+                            $("#movies").empty();
+                            vm = { movieIds: [] };
+                            validator.resetForm();
+                        })
+                        .fail(function () {
+                            toastr.error("Something unexpected happened.");
+                        });
+
+                    return false;
+                }
+            });
+```
+
+Use that custom validator, jQuery validation plug-in look for custom attribute that start with `data-rule` . Add name="customer" and name="movie" to the inputs to have it trigger.
+
+![image-20210901165130962](https://raw.githubusercontent.com/luanhytran/img/master/image-20210901165130962.png)
+
+Result:
+
+![image-20210901165216340](https://raw.githubusercontent.com/luanhytran/img/master/image-20210901165216340.png)
 
 ## Deployment
 

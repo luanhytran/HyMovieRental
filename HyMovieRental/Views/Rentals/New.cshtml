@@ -1,5 +1,4 @@
-﻿
-@{
+﻿@{
     ViewBag.Title = "New";
 }
 
@@ -8,27 +7,26 @@
     <div class="form-group">
         <label>Customer</label>
         <div class="tt-container">
-            <input id="customer" type="text" value="" class="form-control" />
+            <input id="customer" name="customer" required type="text" value="" class="form-control" />
         </div>
     </div>
     <div class="form-group">
         <label>Movie</label>
         <div class="tt-container">
-            <input id="movie"  type="text" value="" class="form-control" />
+            <input id="movie" name="movie" type="text" value="" class="form-control" />
         </div>
     </div>
     <div class="row">
         <div class="col-md-4">
             <ul id="movies" class="list-group"></ul>
         </div>
-    </div>
+    </div> 
     <button class="btn btn-primary">Submit</button>
 </form>
 
-
-
 @section scripts
 {
+    @Scripts.Render("~/bundles/jqueryval")
     <script>
         $(document).ready(function () {
             // This is view model for the rental form, later we use this to post to the server
@@ -45,20 +43,21 @@
                 }
             });
 
+            // auto-complete customer input
             $('#customer').typeahead({
-                    minLength: 3,
-                    highlight: true
-                },
+                minLength: 3,
+                highlight: true
+            },
                 {
                     limit: 50,
                     name: 'customers',
                     display: 'name',
                     source: customers
                 }).on("typeahead:select",
-                // e: event, customer: the selected customer
-                function (e, customer) {
-                // logic for the select event of typeahead when we select a customer name
-                vm.customerId = customer.id;
+                    // e: event, customer: the selected customer
+                    function (e, customer) {
+                        // logic for the select event of typeahead when we select a customer name
+                        vm.customerId = customer.id;
                     });
 
             var movies = new Bloodhound({
@@ -70,42 +69,67 @@
                 }
             });
 
+            // auto-complete movie input
             $('#movie').typeahead({
-                    minLength: 3,
-                    highlight: true
-                },
+                minLength: 3,
+                highlight: true
+            },
                 {
                     limit: 50,
                     name: 'movies',
                     display: 'name',
                     source: movies
                 }).on("typeahead:select",
-                function (e, movie) {
-                    $("#movies").append("<li class='list-group-item'>" + movie.name + "</li>");
+                    function (e, movie) {
+                        $("#movies").append("<li class='list-group-item'>" + movie.name + "</li>");
 
-                    $("#movie").typeahead("val", "");
+                        $("#movie").typeahead("val", "");
 
-                    vm.movieIds.push(movie.id);
-                });
+                        vm.movieIds.push(movie.id);
+                    });
 
-            // e: is the submit event
-            $('#newRental').submit(function (e) {
-                // we use AJAX, so we need to add this line to prevent submit as a traditional HTML form
-                e.preventDefault();
+            // specify the name for the custom validation attribute
+            $.validator.addMethod("validCustomer",function () {
+                // make sure our vm have customerId property and this property have numeric value != 0
+                return vm.customerId && vm.customerId !== 0;
+            },
+                // error message
+                "Please select a valid customer.");
 
-                $.ajax({
-                    url: "/api/newRentals",
-                    method: "post",
-                    data: vm
-                })
-                .done(function() {
-                    toastr.success("Rentals successfully recorded.");
-                })
-                .fail(function() {
-                    toastr.error("Something unexpected happened.");
-                });
+            $.validator.addMethod("movieSelected",
+                function () {
+                    // everything with a value will be true, if this array empty then false
+                    return vm.movieIds.length > 0; 
+                }, "Please select at least one movie.");
+
+            // submit handler and validate for the form
+            var validator = $("#newRental").validate({
+                rules: {
+                    customer: { validCustomer: true },
+                    movie: { movieSelected: true }
+                },
+                submitHandler: function () {
+                    $.ajax({
+                        url: "/api/newRentals",
+                        method: "post",
+                        data: vm
+                    })
+                        .done(function () {
+                            toastr.success("Rentals successfully recorded.");
+                            $("#customer").typeahead('val', '');
+                            $("#movie").typeahead('val', '');
+                            $("#movies").empty();
+                            vm = { movieIds: [] };
+                            validator.resetForm();
+                        })
+                        .fail(function () {
+                            toastr.error("Something unexpected happened.");
+                        });
+
+                    // prevent submit as a traditional HTML form
+                    return false;
+                }
             });
-
         });
     </script>
 }
