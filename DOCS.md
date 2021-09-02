@@ -1716,13 +1716,197 @@ This is how we work with application settings
 
 ## Securing Configuration Settings
 
+This approach has complexity and I would recommend to use it only if you working on a project where security is a big concern otherwise keep thing simple. 
+
+The security problem we have here is we storing our Facebook app secret here as plain text, also in the connection strings section we don't currently have a username and password but in most real world app it have.
+
+![image-20210902103718827](https://raw.githubusercontent.com/luanhytran/img/master/image-20210902103718827.png)
+
+When we push this code onto our source control repo, these secret are visible to anyone that has access to that public repository. So we need to exclude these privacy information from source control. Instead every dev will have them on their machine and when a new dev join the team, someone in the team will send him the Secret Key internally.
+
+**Step 1:**
+We add new item, make sure to select `.config` , don't use `.xml` because by default IIS does not serve configuration files. 
+
+![image-20210902150634837](https://raw.githubusercontent.com/luanhytran/img/master/image-20210902150634837.png)
+
+Now go to `Web.config` and cut the `<appSettings>` section to this `AppSettings.config` file
+
+![image-20210902150924553](https://raw.githubusercontent.com/luanhytran/img/master/image-20210902150924553.png)
+
+Now go back to `Web.config` , we specify the configuration source to `AppSettings.config` . When push to public repo we can exclude this `AppSettings.config` file and this will prevent the issue we talk above. Do this only if you are using a public repo. If you are using a public repo internally and only few people have accessed to that repo then you don't really need to do this unless you work on a project where security is a big concern.
+
+![image-20210902151052728](https://raw.githubusercontent.com/luanhytran/img/master/image-20210902151052728.png)
+
+By the way you can repeat the exact same step with the connection string. 
+
+**Step 2:**
+
+In term of deployment, when we deploy our app, these external config files will also be deploy with `Web.config` . Now there is another risk here, on the target web server , if the hacker get accessed to the web server, they can find all the secret in our `AppSettings.config` file and can even get full access to the database and read a lot of private data or just execute a script and mess up with the data. 
+
+**To prevent this we need to encrypt these files** , now I will show you a simplify version of this process so you see how everything work. But in reality, there are more complex to this.
+
+After we deploy (publish) our app to a destination folder, before uploading these file to our web server, we need to encrypt our settings. 
+
+**Step 3:** 
+
+We search for this program and run it as Admin otherwise it not gonna work.
+
+![image-20210902152441172](https://raw.githubusercontent.com/luanhytran/img/master/image-20210902152441172.png)
+
+**Step 4:** **Encrypt app settings**
+
+After open the program we enter this line of command
+
+```powershell
+aspnet_regiis -pef "appSettings" "C:\Users\hytra\Desktop\Deploy" -prov "DataProtectionConfigurationProvider"
+```
+
+Explain:
+
+For demo purpose, we gonna supply a provider 
+
+`-pef` : encrypt setting, `-pdf` : decrypt setting
+
+`-prove` is provider, for demo purpose, we gonna supply a provider named `"DataProtectionConfigurationProtectionProvider"` , this means the machine that can decrypt this `Web.config` is the one that encrypt it. This isn't going to work on your workflow because you gonna encrypt this `Web.config` in your build machine and then deploy to a different machine and you will use different provider call RSA and for that to work we need to create a digital certificate and share it between these machine then any machine with this certificate can decrypt this file.
+
+With this command we telling the framework to encrypt the appSettings section in our `Web.config` , if the appSettings section have setting internally they'll be encrypted there otherwise if it store in a external file, in our case is `AppSettings.config` will be encrypted. In real-world you repeat the same step for connection string as well.
+
+**Result:**
+
+![image-20210902153633521](https://raw.githubusercontent.com/luanhytran/img/master/image-20210902153633521.png)
+
+To make sure it work, we go to the Deploy folder and open `AppSettings.config` to see the settings have been encrypted. if anyone get accessed to the server, they cannot extract our secret here.
+
+![image-20210902153737671](https://raw.githubusercontent.com/luanhytran/img/master/image-20210902153737671.png)
+
+Even though our app settings are encrypted, ASP.NET MVC runtime can decrypt it and extract the value.
 
 
 
+**This is how we decrypt app setting**
+
+Enter this line of command in the program we use to encrypt
+
+```powershell
+aspnet_regiis -pdf "appSettings" "C:\Users\hytra\Desktop\Deploy"
+```
+
+Result:
+
+![image-20210902154056602](https://raw.githubusercontent.com/luanhytran/img/master/image-20210902154056602.png)
+
+Now our `AppSettings.config` is decrypted
+
+![image-20210902154125385](https://raw.githubusercontent.com/luanhytran/img/master/image-20210902154125385.png)
+
+This is manual and time consuming, in the real-world project where we need this kind of level security, we need to implement build automation. So you will create a script using tool like powershell then publish the project to the file system and then encrypt app settings and connection string.
 
 ## Custom Error Pages
 
+We throw a exception so that we can test our custom error page
 
+![image-20210902155213734](https://raw.githubusercontent.com/luanhytran/img/master/image-20210902155213734.png)
+
+Navigate to this page, we get the detail about the exception and where it hanppen
+
+![image-20210902155231353](https://raw.githubusercontent.com/luanhytran/img/master/image-20210902155231353.png)
+
+This error page is great for dev but we don't want to display this on production because 
+
+- This will freak out our users
+- We will add our app at risk in term of security 
+  - Because hacker can try various input to our app to get an idea of how we have written the code and also find the version of .NET we're using, with this they can easily do a google search to find the vuneralbility of this version.
+
+To solve this issue,  in `Web.config` , at `<system.web>` we add this element
+
+![image-20210902162120503](https://raw.githubusercontent.com/luanhytran/img/master/image-20210902162120503.png)
+
+`mode="On"` : always display  friendly or custom error message instead of the exception details. In this video we set to this mode because we want to enforce custom error pages so we can see them.
+
+`mode="RemoteOnly"` : custom or friendly error message are only display to the machine that connect remotely. As a dev we browsing locally, we want to see the error detail so this is a better setting.
+
+**Result:**
+
+This error page is in Views > Shared > Error.cshtml 
+
+![image-20210902162051342](https://raw.githubusercontent.com/luanhytran/img/master/image-20210902162051342.png)
+
+**Who is serving this view behind the scene?** we don't have a controller for that. That's where one of our global action filter comes into the picture. 
+
+This filter is apply to all controllers and all actions. It executed after an action and if there is an unhandled exception in that action, it will catch it and then render the custom error view.
+
+![image-20210902162307138](https://raw.githubusercontent.com/luanhytran/img/master/image-20210902162307138.png)
+
+
+
+There are another kind of HTTP error we need to handle explicitly that is 404 error which indicate a given resource is not found on the server.
+
+**Example of 404 error URL:**
+
+1. This page is come from ASP.NET framework and we get this because ASP.NET can't find an action that match this URL pattern
+
+   ![image-20210902162954047](https://raw.githubusercontent.com/luanhytran/img/master/image-20210902162954047.png)
+
+2. The `HttpNotFound` set the status code of the response to 404
+
+   ![image-20210902163102689](https://raw.githubusercontent.com/luanhytran/img/master/image-20210902163102689.png)
+
+   Now we navigate to this URL and provide a invalid Id
+
+   ![image-20210902163229777](https://raw.githubusercontent.com/luanhytran/img/master/image-20210902163229777.png)
+
+   This error page is coming from IIS so it different from the first one, when the status code of the response is 404, IIS will generate this error page.
+
+3. Access static resource error page
+
+   ![image-20210902163502405](https://raw.githubusercontent.com/luanhytran/img/master/image-20210902163502405.png)
+
+   Again we see the IIS error page, but what happen to our customer error page? The customer error page is only render when there is an exception in our application, the `HandleErrorAttribute` catch the exception and render the view. 
+   But when we access a static resource like `image.gif` , there is no exception, in fact this request doesn't make it to ASP.NET framework, it hit IIS first and IIS can tell from the URL pattern that this is a static resource so it will handle it to ASP.NET. The same thing happen when we return `HttpNotFound` , this method just set the 404 status code and the rest is handle by IIS  but not throwing an exception. So `HandleErrorAttribute` for custom error page does not work in this case.
+
+For 404 error custom error page, we need a little bit more configuration. 
+
+We go to `Web.config` and add this child element
+
+![image-20210902164330687](https://raw.githubusercontent.com/luanhytran/img/master/image-20210902164330687.png)
+
+This tell MVC framework that if we encounter a 404 error, we should redirect user to this page. `~` character represent the root of the site.
+
+**Why we redirect to a static page instead a action like `~/Error/NotFound` ?**
+
+The difference is if something happen in our app (an error), troubleshooting that is more complicated so in this situation when there is a 404 error it best to get out of the ASP.NET zone and serve a static file. Also this make deployment easier, so if you want to change a static file then you can deploy it individually, we don't have to recompile and redeploy our app.
+
+So in the project root we add a 404.html page
+
+![image-20210902164905638](https://raw.githubusercontent.com/luanhytran/img/master/image-20210902164905638.png)
+
+**Result:**
+
+We navigate to a none existing action
+
+![image-20210902165059181](https://raw.githubusercontent.com/luanhytran/img/master/image-20210902165059181.png)
+
+**Custom error page for accessing static file**
+
+But when access static file we still have this standard IIS error page
+
+![image-20210902165206173](https://raw.githubusercontent.com/luanhytran/img/master/image-20210902165206173.png)
+
+To change this we need to supply a bit more configuration in `Web.config` 
+
+![image-20210902185842045](https://raw.githubusercontent.com/luanhytran/img/master/image-20210902185842045.png)
+
+First we remove 404 error page and then we add another error page.
+
+`errorMode="Custom"` : We want to display custom error pages at all time both for local and remote client. In this case we use this to see to custom error page.
+
+`errorMode="DetailedLocalOnly"` : display custom error pages only to remote client.
+
+`responseMode="File"` : This is very important, if you use other setting than `File`  the status code will change from 404 to 200. So from the perspective of the client, they don't actually get the 404 error and this is bad for certain optimization
+
+**Result:**
+
+![image-20210902185929263](https://raw.githubusercontent.com/luanhytran/img/master/image-20210902185929263.png)
 
 ## Logging Unhandled Exceptions
 

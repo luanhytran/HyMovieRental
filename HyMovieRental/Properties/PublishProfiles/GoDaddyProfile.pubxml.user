@@ -5,9 +5,12 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <_PublishTargetUrl>C:\Users\hytra\Desktop\Deploy</_PublishTargetUrl>
-    <History>True|2021-09-01T18:00:02.6382066Z;</History>
+    <History>True|2021-09-02T08:33:28.2957488Z;True|2021-09-02T01:00:02.6382066+07:00;</History>
   </PropertyGroup>
   <ItemGroup>
+    <File Include="AppSettings.config">
+      <publishTime>09/02/2021 15:09:05</publishTime>
+    </File>
     <File Include="bin/Antlr3.Runtime.dll">
       <publishTime>09/10/2013 16:29:20</publishTime>
     </File>
@@ -39,10 +42,10 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>02/04/2014 18:55:28</publishTime>
     </File>
     <File Include="bin/HyMovieRental.dll">
-      <publishTime>09/02/2021 00:59:51</publishTime>
+      <publishTime>09/02/2021 15:33:18</publishTime>
     </File>
     <File Include="bin/HyMovieRental.pdb">
-      <publishTime>09/02/2021 00:59:51</publishTime>
+      <publishTime>09/02/2021 15:33:18</publishTime>
     </File>
     <File Include="bin/Microsoft.AspNet.Identity.Core.dll">
       <publishTime>11/25/2019 10:57:50</publishTime>
@@ -963,7 +966,7 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>08/03/2021 18:03:14</publishTime>
     </File>
     <File Include="Views/Customers/CustomerForm.cshtml">
-      <publishTime>08/27/2021 08:20:37</publishTime>
+      <publishTime>09/02/2021 02:24:34</publishTime>
     </File>
     <File Include="Views/Customers/Detail.cshtml">
       <publishTime>08/03/2021 20:17:09</publishTime>
@@ -1008,7 +1011,7 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>08/05/2021 17:49:45</publishTime>
     </File>
     <File Include="Views/Movies/Random.cshtml">
-      <publishTime>08/03/2021 20:15:49</publishTime>
+      <publishTime>09/02/2021 02:24:01</publishTime>
     </File>
     <File Include="Views/Movies/ReadOnlyList.cshtml">
       <publishTime>08/28/2021 21:20:41</publishTime>
@@ -1038,7 +1041,7 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>08/03/2021 18:02:55</publishTime>
     </File>
     <File Include="Web.config">
-      <publishTime>09/02/2021 00:59:52</publishTime>
+      <publishTime>09/02/2021 15:33:19</publishTime>
     </File>
   </ItemGroup>
 </Project>
