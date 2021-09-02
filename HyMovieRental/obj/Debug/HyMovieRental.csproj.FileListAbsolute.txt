@@ -343,7 +343,6 @@ D:\GitHub\HyMovieRental\HyMovieRental\obj\Debug\HyMovieRental.Migrations.AddMore
 D:\GitHub\HyMovieRental\HyMovieRental\obj\Debug\HyMovieRental.Migrations.PopulateGenre.resources
 D:\GitHub\HyMovieRental\HyMovieRental\obj\Debug\HyMovieRental.csproj.GenerateResource.cache
 D:\GitHub\HyMovieRental\HyMovieRental\obj\Debug\HyMovieRental.csproj.CoreCompileInputs.cache
-D:\GitHub\HyMovieRental\HyMovieRental\obj\Debug\HyMovieRental.csproj.CopyComplete
 D:\GitHub\HyMovieRental\HyMovieRental\obj\Debug\HyMovieRental.dll
 D:\GitHub\HyMovieRental\HyMovieRental\obj\Debug\HyMovieRental.pdb
 D:\GitHub\HyMovieRental\HyMovieRental\obj\Debug\HyMovieRental.Migrations.ChangeNumberInStockToByte.resources

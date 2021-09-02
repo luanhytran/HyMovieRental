@@ -1138,8 +1138,6 @@ Result:
 
 ![image-20210901165216340](https://raw.githubusercontent.com/luanhytran/img/master/image-20210901165216340.png)
 
-## Deployment
-
 
 
 # Client-side
@@ -1660,13 +1658,65 @@ Both this file are just XML that include the settings for each deployment enviro
 
 And when you check this in your source control, all this publish profiles are available to all devs in the team. So next time someone want to deploy, they just need to click Publish the project and select the right profile and then do the deployment
 
-![image-20210902011042617](https://raw.githubusercontent.com/luanhytran/img/master/image-20210902011042617.png)
+![image-20210902013448508](https://raw.githubusercontent.com/luanhytran/img/master/image-20210902013448508.png)
 
 ## Application Settings
 
+In most if not all app, we have one or more settings that can impact how the app operate.
 
+For example our app may use a mail server to send emails, so you need to know the address of the mail server as well as the username and password. As best practice, we should not store these settings in the code. Instead we store them in a configuration files and that where our `Web.config` come into the picture. 
+
+So in `Web.config` we have this section where we can store app settings using key value pairs. By default, we have 4 settings here which is basically there because of the  legacy stuff in ASP.NET MVC and how it have involve from version 1 to version 5. 
+
+![image-20210902013655361](https://raw.githubusercontent.com/luanhytran/img/master/image-20210902013655361.png)
+
+For example we have these settings, you don't need to really touch any of these stuff as they're use internally by the MVC framework so just leave the way they are.
+
+![image-20210902013905632](https://raw.githubusercontent.com/luanhytran/img/master/image-20210902013905632.png)
+
+
+
+**Real-word example for using application settings**
+
+Earlier we added Facebook authentication, the App ID and Secret Key are hard coded here. So we gonna move this to application settings.
+
+![image-20210902014219177](https://raw.githubusercontent.com/luanhytran/img/master/image-20210902014219177.png)
+
+Go to `Web.config` at `<appSettings>` we add these line
+
+![image-20210902014410331](https://raw.githubusercontent.com/luanhytran/img/master/image-20210902014410331.png)
+
+ Now back to our `Startup` class, to read app settings in `Web.config` , we use `ConfigurationManager` class to use the application settings for Facebook.
+
+![image-20210902100452928](https://raw.githubusercontent.com/luanhytran/img/master/image-20210902100452928.png)
+
+So this is basically with application settings.
+
+
+
+**More example work with mail server**
+
+This is just for demo, we are not send email. In `Web.config` add MailServer setting.
+
+![image-20210902100625628](https://raw.githubusercontent.com/luanhytran/img/master/image-20210902100625628.png)
+
+Let say in our testing environment, we want to use a different mail server, that's where our build configurations come into the picture. Now go to `Web.Testing.config`  and override the MailServer of the parent `Web.config` with the testing environment MailServer. Use `Match(key)` to specify that the `key` attribute in this config will override the parent `Web.config` MailServer key.
+
+![image-20210902101653160](https://raw.githubusercontent.com/luanhytran/img/master/image-20210902101653160.png)
+
+Now right click `Web.Testing.config` and choose this
+
+![image-20210902102947834](https://raw.githubusercontent.com/luanhytran/img/master/image-20210902102947834.png)
+
+You see that our testing environment MailServer has override the MailServer of the parent `Web.config` 
+
+![image-20210902103042710](https://raw.githubusercontent.com/luanhytran/img/master/image-20210902103042710.png)
+
+This is how we work with application settings
 
 ## Securing Configuration Settings
+
+
 
 
 

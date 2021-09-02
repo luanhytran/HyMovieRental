@@ -6,6 +6,7 @@ using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.Google;
 using Owin;
 using HyMovieRental.Models;
+using System.Configuration;
 
 namespace HyMovieRental
 {
@@ -55,8 +56,8 @@ namespace HyMovieRental
             //   consumerSecret: "");
 
             app.UseFacebookAuthentication(
-               appId: "847423532578925",
-               appSecret: "bc1dfff1c909cbe55cf5693ea8376885");
+               appId: ConfigurationManager.AppSettings["FacebookAppId"],
+               appSecret: ConfigurationManager.AppSettings["FacebookAppSecret"]);
 
             //app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
             //{

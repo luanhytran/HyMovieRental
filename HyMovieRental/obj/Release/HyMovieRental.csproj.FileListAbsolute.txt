@@ -129,7 +129,6 @@ D:\GitHub\HyMovieRental\HyMovieRental\obj\Release\HyMovieRental.Migrations.Chang
 D:\GitHub\HyMovieRental\HyMovieRental\obj\Release\HyMovieRental.Migrations.SeedUsers.resources
 D:\GitHub\HyMovieRental\HyMovieRental\obj\Release\HyMovieRental.csproj.GenerateResource.cache
 D:\GitHub\HyMovieRental\HyMovieRental\obj\Release\HyMovieRental.csproj.CoreCompileInputs.cache
-D:\GitHub\HyMovieRental\HyMovieRental\obj\Release\HyMovieRental.csproj.CopyComplete
 D:\GitHub\HyMovieRental\HyMovieRental\obj\Release\HyMovieRental.dll
 D:\GitHub\HyMovieRental\HyMovieRental\obj\Release\HyMovieRental.pdb
 D:\GitHub\HyMovieRental\HyMovieRental\obj\Release\HyMovieRental.Migrations.AddRentals.resources

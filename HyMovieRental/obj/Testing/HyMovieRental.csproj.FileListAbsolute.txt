@@ -131,6 +131,5 @@ D:\GitHub\HyMovieRental\HyMovieRental\obj\Testing\HyMovieRental.Migrations.AddRe
 D:\GitHub\HyMovieRental\HyMovieRental\obj\Testing\HyMovieRental.Migrations.AddNumberAvailableToMovie.resources
 D:\GitHub\HyMovieRental\HyMovieRental\obj\Testing\HyMovieRental.csproj.GenerateResource.cache
 D:\GitHub\HyMovieRental\HyMovieRental\obj\Testing\HyMovieRental.csproj.CoreCompileInputs.cache
-D:\GitHub\HyMovieRental\HyMovieRental\obj\Testing\HyMovieRental.csproj.CopyComplete
 D:\GitHub\HyMovieRental\HyMovieRental\obj\Testing\HyMovieRental.dll
 D:\GitHub\HyMovieRental\HyMovieRental\obj\Testing\HyMovieRental.pdb
