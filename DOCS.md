@@ -1910,7 +1910,39 @@ First we remove 404 error page and then we add another error page.
 
 ## Logging Unhandled Exceptions
 
+To log unhandled exceptions we use this popular package call Elmah (Error Logging Modules and Handlers) . 
 
+```powershell
+install-package Elmah
+```
+
+**How it work?**
+
+It plug into the request processing pipeline and if there is a unhandled exception, it will grab it details and store it. By default it store this detail in the memory, but with small configuration we can have it store exception in different kind of database.
+
+**How to use it?**
+
+Change this to `RemoteOnly` to see the detail exception by MVC framework
+
+![image-20210902192016545](https://raw.githubusercontent.com/luanhytran/img/master/image-20210902192016545.png)
+
+Now navigate to `https://localhost:44389/elmah.axd` , you can see the exception that elmah has captured.
+
+![image-20210902192034127](https://raw.githubusercontent.com/luanhytran/img/master/image-20210902192034127.png)
+
+Here's the beauty, if we click in the Details link, we can see the exception message as well as stack trace.. with a lot of data that can help us troubleshoot the problem.
+
+This elmah endpoint is only accessible locally for security reasons. When you deploy your app and you want to access this remotely, you need to do a bit of configuration.
+
+**Use Elmah in prodution**
+
+Go to `Web.config` , search for `elmah.axd` and uncomment the `<authorization>` element, at here we can specify which users can access `elmah.axd` endpoint. Each user is separate with a comma.
+
+![image-20210902193142624](https://raw.githubusercontent.com/luanhytran/img/master/image-20210902193142624.png)
+
+When we save `Web.config` our web app are restarted and because by default elmah store exception detail in memory and the log will be clear.
+
+Have a look at Elmah documentation and find the configuration you need to add to the exception detail in sql server. It also have other useful feature like configured to send email when it block the exception.. 
 
 ## Final Touch
 
