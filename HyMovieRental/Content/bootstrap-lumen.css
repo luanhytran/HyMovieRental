@@ -3861,30 +3861,30 @@ fieldset[disabled] a.btn {
 
 .btn-primary {
     color: #ffffff;
-    background-color: #158cba;
-    border-color: #127ba3;
+    background-color: #D72323;
+    border-color: #BE3144;
 }
 
     .btn-primary:focus,
     .btn-primary.focus {
         color: #ffffff;
-        background-color: #106a8c;
-        border-color: #052531;
+        background-color: #D72323;
+        border-color: #BE3144;
     }
 
     .btn-primary:hover {
         color: #ffffff;
-        background-color: #106a8c;
-        border-color: #0c516c;
+        background-color: #D72323;
+        border-color: #BE3144;
     }
 
     .btn-primary:active,
     .btn-primary.active,
     .open > .dropdown-toggle.btn-primary {
         color: #ffffff;
-        background-color: #106a8c;
+        background-color: #D72323;
         background-image: none;
-        border-color: #0c516c;
+        border-color: #BE3144;
     }
 
         .btn-primary:active:hover,
@@ -3897,8 +3897,8 @@ fieldset[disabled] a.btn {
         .btn-primary.active.focus,
         .open > .dropdown-toggle.btn-primary.focus {
             color: #ffffff;
-            background-color: #0c516c;
-            border-color: #052531;
+            background-color: #D72323;
+            border-color: #BE3144;
         }
 
     .btn-primary.disabled:hover,
@@ -3910,8 +3910,8 @@ fieldset[disabled] a.btn {
     .btn-primary.disabled.focus,
     .btn-primary[disabled].focus,
     fieldset[disabled] .btn-primary.focus {
-        background-color: #158cba;
-        border-color: #127ba3;
+        background-color: #D72323;
+        border-color: #BE3144;
     }
 
     .btn-primary .badge {
@@ -5574,7 +5574,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 
         .navbar-inverse .navbar-brand:hover,
         .navbar-inverse .navbar-brand:focus {
-            color: #333333;
+            color: #CDD0CB;
             background-color: transparent;
         }
 
@@ -5588,7 +5588,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 
         .navbar-inverse .navbar-nav > li > a:hover,
         .navbar-inverse .navbar-nav > li > a:focus {
-            color: #333333;
+            color: #CDD0CB;
             background-color: transparent;
         }
 

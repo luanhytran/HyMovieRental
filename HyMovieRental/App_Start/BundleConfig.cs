@@ -28,6 +28,7 @@ namespace HyMovieRental
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                 "~/Content/bootstrap-lumen.css",
+                "~/content/bootstrap-theme.css",
                 "~/content/datatables/css/datatables.bootstrap.css",
                 "~/content/typeahead.css",
                 "~/content/toastr.css",
